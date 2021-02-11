@@ -4,21 +4,28 @@ path = process.argv[3];
 const request = require('request');
 const fs = require('fs');
 
-console.log(url);
-console.log(path);
+
 
 const fetcher = function (url, path) {
-  
-request(url, (error, response, body) => {
-  console.log(`error:`, error);
-  console.log(`statuscode:`, response && response.statusCode);
-  fs.writeFile(path, body, function(err) {
-    if (err) {
-      return console.log(err);
-    }
-    console.log(`Downloaded ${body.length} bytes and saved to ${path}`);
+  if(url === undefined) {
+    console.log('URL cannot be undefined')
+  };
+  if(path === undefined) {
+    console.log('Please input valid path.')
+  };
+  if( url !== undefined && path !== undefined) {
+  request(url, (error, response, body) => {
+    console.log(`error:`, error);
+    console.log(`statuscode:`, response && response.statusCode);
+    fs.writeFile(path, body, (err) => {
+      if (err) {
+        return console.log(err.message);
+      } else {
+      console.log(`Downloaded ${body.length} bytes and saved to ${path}`);
+      }
+    })
   })
-})
+}
 };
 
 fetcher(url, path)
